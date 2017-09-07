@@ -35,7 +35,7 @@ passport.use(new Auth0Strategy({
 
     db.find_user(profile.id).then(user => {
         if(user[0]) {
-            return done(null, user);
+            return done(null, user[0]);
         } else {
             db.create_user([profile.displayName, profile.emails[0].value, profile.picture, profile.id]).then(user => {
                 return done(null, user[0]);
@@ -51,7 +51,7 @@ passport.serializeUser(function(user, done) {
 
 //USER COMES FROM SESSION - THIS IS INVOKED FOR EVERY ENDPOINT
 passport.deserializeUser(function(user, done) {
-    app.get('db').find_session_user(user[0].id).then(user => {
+    app.get('db').find_session_user(user.id).then(user => {
         return done(null, user[0]);
     })
 })
